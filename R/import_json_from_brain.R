@@ -19,13 +19,7 @@ nodes_orig <- jsonlite::stream_in(file(nodes.fn))
 links_orig <- jsonlite::stream_in(file(links.fn))
 
 
-# Create a lookup table for brain metadata --------------------------------
-## These were taken from this forum: https://forums.thebrain.com/post/in-links-json-what-are-these-fields-10616870
-## I could not find this in their documentation...
-read.csv("data-raw/brain-meta-ref.csv") # this will be saved in the package
-
-
 # Clear junk  -------------------------------------------------------------
-export <- c(paste(export), "defs", "nodes_orig", "links_orig" ,"export")
+export <- c(paste(export),  "nodes_orig", "links_orig" ,"export")
 rm(list=setdiff(ls(), export))
 
