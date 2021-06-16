@@ -1,0 +1,20 @@
+﻿num,ind,text,explanation,source
+0,ACType,Public,Not hidden,Thoughts.json
+1,ACType,Private,Hidden to others,Thoughts.json
+1,Kind,Normal,"A normal node, no types or tags assigned.",Thoughts.json
+2,Kind,Type,"A node can have only 1 type, but can have no type (Kind=1)",Thoughts.json
+4,Kind,Tag,A node can have multiple tags,Thoughts.json
+0,Relation,NoValue,No relationship. ,Links.json
+1,Relation,Child,A HAS_CHILD B,Links.json
+2,Relation,Parent,A HAS_PARENT B,Links.json
+3,Relation,Jump,NA,Links.json
+4,Relation,Sibling,NA,Links.json
+1,Meaning,Normal,NA,Links.json
+2,Meaning,InstanceOf,A HAS_TAG B,Links.json
+3,Meaning,SuperType,A HAS_CHILD_TYPE B,Links.json
+4,Meaning,HasEvent,A timestamp or date associated with link.,Links.json
+5,Meaning,HasTag,B HAS_TAG A,Links.json
+6,Meaning,System,NA,Links.json
+7,Meaning,SubTagOf,B HAS_SUPERTAG_B,Links.json
+1,Kind,Normal,Link has no tag or type.,Links.json
+2,Kind,Type,NA,Links.json
