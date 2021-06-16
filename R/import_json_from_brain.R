@@ -18,31 +18,14 @@ links.fn <-  paste0(data.in, "brain_export_", date,"/links.json")
 nodes_orig <- jsonlite::stream_in(file(nodes.fn))
 links_orig <- jsonlite::stream_in(file(links.fn))
 
-# # Create a lookup table for TheBrain relationships
-# ## These were grabbed from this forum: https://forums.thebrain.com/post/in-links-json-what-are-these-fields-10616870
-# defs <- read.csv("thebrain_lookup.csv") %>% select(name, value, explanation)
-# t <- read.csv("grid.csv")
-# t <- t %>% filter(!(is.na(Meaning) & is.na(Kind) & is.na(Relation)))
-# for(i in 1:nrow(t)){
-#     m.ind = t$Meaning[i]
-#     k.ind = t$Kind[i]
-#     r.ind = t$Relation[i]
-#     t$Meaning.def[i] = defs$explanation[defs$name=="Meaning" & defs$value==m.ind]
-#     t$Kind.def[i] = defs$explanation[defs$name=="Kind" & defs$value==k.ind]
-#     t$Relation.def[i] = defs$explanation[defs$name=="Relation" & defs$value==r.ind]
-#
-#  }
-# write.csv(t, "data-raw/thebrain_lookup.csv)
 
-# Import the created lookup table of code definitions
-defs <-
-    read.csv(paste0(data.in, "thebrain_lookup.csv")) %>% mutate(Explanation = if_else(
-        !is.na(Relation.def),
-        paste0("ThoughtIdA has ", Relation.def, " ThoughtIdAB"),
-        "NA"
-    ))
+# Create a lookup table for brain metadata --------------------------------
+## These were taken from this forum: https://forums.thebrain.com/post/in-links-json-what-are-these-fields-10616870
+## I could not find this in their documentation...
+read.csv("data-raw/brain-meta-ref.csv") # this will be saved in the package
 
 
 # Clear junk  -------------------------------------------------------------
-rm(links.fn, nodes.fn, date)
+export <- c(paste(export), "defs", "nodes_orig", "links_orig" ,"export")
+rm(list=setdiff(ls(), export))
 

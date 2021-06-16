@@ -14,8 +14,7 @@ links <- links_orig %>%
     filter(!ThoughtIdA %in% removed.nodeids) %>%
     filter(!ThoughtIdB %in% removed.nodeids) %>%
     filter(!TypeId %in% removed.nodeids) %>%
-    select(ThoughtIdA, ThoughtIdB, Id, Meaning) # keep only useful cols
-
+    select(ThoughtIdA, ThoughtIdB, Id, Meaning, Relation) # keep only useful cols
 
 # QA/QC Test -------------------------------------------------------------------
 # check to make sure all Thoughts are represented in the nodes (should = null ornodes charater(0))
@@ -25,7 +24,7 @@ if(!is_empty(unique(nodes_orig$Id)[!which((unique(nodes_orig$Id) %in%links$Thoug
 
 
 # Save objs to export -----------------------------------------------------
-export <- c(paste(export), "nodes", "links", "defs", "export")
+export <- c(paste(export), "nodes", "links", "defs")
 # remove all else from mem
 rm(list=setdiff(ls(), export))
 
