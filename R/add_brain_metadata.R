@@ -47,6 +47,13 @@ for(j in seq_along(objs.defs)) {
 }
 
 
+# Reorder columns for sanity ----------------------------------------------
+nodes <- nodes %>% relocate(.before=c(Name, TypeId)) %>%
+    relocate(.after=c(Label, Id))
+links <- links %>% relocate(.before=c(ThoughtIdA, ThoughtIdB)) %>%
+    relocate(.after=c(Meaning, Relation, Id))
+
+
 # Clear junk  -------------------------------------------------------------
 export <- c(paste(export), "defs")
 rm(list=setdiff(ls(), export))
