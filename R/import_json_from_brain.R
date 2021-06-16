@@ -3,7 +3,7 @@
 
 # Setup -------------------------------------------------------------------
 # Create an empty list in which to store objects of interest
-export <- list()
+if(!exists("export"))export <- NA
 if(!exists("date"))warning("Please specify 'date' before running `import_json_from_brain.R`")
 # create dir for data out if does not exist
 suppressWarnings(dir.create(data.out))
