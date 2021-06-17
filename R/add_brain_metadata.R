@@ -22,25 +22,26 @@ defs.nodes <- defs %>% filter(source=="Thoughts.json") %>%
 # left_join(nodes, defs.nodes) -> test
 
 # merge defs with nodes and links
-
+nodes.new <- nodes
+links.new <- links
 objs.defs <- list(defs.nodes, defs.links)
-objs.df <- list(nodes, links)
-names(objs.df) <- c("nodes", "links")
+objs.df <- list(nodes.new, links.new)
+names(objs.df) <- c("nodes.new", "links.new")
 for(j in seq_along(objs.defs)) {
-    cols = unique(objs.defs[[j]]$ind)
-    for (i in seq_along(cols)) {
-        index = cols[i]
         def.df <- objs.defs[[j]]
         data.df <-  objs.df[[j]]
+        cols <- unique(def.df$ind)
+    for (i in seq_along(cols)) {
+        index = cols[i]
         if(!index %in% names(data.df)) next(print(paste("skipping",index, "...DNE")))
-        def.df <- def.df %>% filter(ind %in% index) %>%
+        def.df.subset <- def.df %>% filter(ind %in% index) %>%
             select(-ind) %>%
             rename(
                 !!index := num,!!paste0(index, "Explanation") := explanation,
                 !!paste0(index, "RelationshipText") := text
             )
-        if(names(objs.df)[j]=="nodes") {nodes <- left_join(nodes, def.df)}
-        if(names(objs.df)[j]=="links") {links <- left_join(links, def.df)}
+        if(names(objs.df)[j]=="nodes.new") {nodes.new <- left_join(nodes.new, def.df.subset)}
+        if(names(objs.df)[j]=="links.new") {links.new <- left_join(links.new, def.df.subset)}
 
         # print(paste("i=",i, "j=",j))
     }
@@ -48,9 +49,9 @@ for(j in seq_along(objs.defs)) {
 
 
 # Reorder columns for sanity ----------------------------------------------
-nodes <- nodes %>% relocate(.before=c(Name, TypeId)) %>%
+nodes <- nodes.new %>% relocate(.before=c(Name, TypeId)) %>%
     relocate(.after=c(Label, Id))
-links <- links %>% relocate(.before=c(ThoughtIdA, ThoughtIdB)) %>%
+links <- links.new %>% relocate(.before=c(ThoughtIdA, ThoughtIdB)) %>%
     relocate(.after=c(Meaning, Relation, Id))
 
 
