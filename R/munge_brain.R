@@ -24,7 +24,8 @@ if(!is_empty(unique(nodes_orig$Id)[!which((unique(nodes_orig$Id) %in%links$Thoug
 
 
 # Save objs to export -----------------------------------------------------
-export <- c(paste(export), "nodes", "links", "defs")
+export <- c(paste(export), "nodes", "links")
+if(exists("defs")) export <- c(paste(export), "defs")
 # remove all else from mem
 rm(list=setdiff(ls(), export))
 

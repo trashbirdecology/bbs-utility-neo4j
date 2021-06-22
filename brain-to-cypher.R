@@ -1,6 +1,6 @@
 rm(list=ls())
 # P. Setup -------------------------------------------------------------------
-date = "20210615" # for grabbing files. choose most rrecent or preferred brain export dump
+date = "20210622" # for grabbing files. choose most rrecent or preferred brain export dump
 # initialize vector for storing export object names of interest.
 export <- c("data.in", "data.out")
 
@@ -70,6 +70,6 @@ if(any(links$ThoughtIdB %in% euts_to_paraphrased$EndUserTypeId))warning("oops")
 
 # Export ------------------------------------------------------------------
 
-
+source("R/export_files_for_neo4j.r")
 
 # 999.END RUN -----------------------------------------------------------------
