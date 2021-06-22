@@ -12,17 +12,32 @@ nodes <- setdiff(nodes, bind_rows(jlb.lookup.id, para.lookup.id))
 
 
 # grab all the nodes that have the JLB tags
-jlb.interpretations <- links %>% filter(ThoughtIdA %in% jlb.lookup.id)
+jlb_interpretations <- links %>% filter(ThoughtIdA %in% jlb.lookup.id)
 # grab all the nodes that have the JLB tags
-paraphrased.responses <- links %>% filter(ThoughtIdA %in% para.lookup.id)
+paraphrased_responses <- links %>% filter(ThoughtIdA %in% para.lookup.id)
 
 ## remove all these from LINKS
-links <- setdiff(links, bind_rows(paraphrased.responses, jlb.interpretations))
+links <- setdiff(links, bind_rows(paraphrased_responses, jlb_interpretations))
+
+# Munge the names  --------------------------------------------------------
+paraphrased_responses <- paraphrased_responses %>%
+    rename(Id=ThoughtIdA,
+           ChildNodeId=ThoughtIdB,
+           LinkId=Id) %>% select(-Meaning, -Relation)
+
+
+
+# Munge the names  --------------------------------------------------------
+jlb_interpretations <- jlb_interpretations %>%
+    rename(Id=ThoughtIdA,
+           ChildNodeId=ThoughtIdB,
+        LinkId=Id) %>% select(-Meaning, -Relation)
+
 
 
 
 # Save objs to export -----------------------------------------------------
-export <- c(paste(export), "paraphrased.responses", "jlb.interpretations")
+export <- c(paste(export), "paraphrased_responses", "jlb_interpretations")
 
 # remove all else from mem
 rm(list=setdiff(ls(), export))

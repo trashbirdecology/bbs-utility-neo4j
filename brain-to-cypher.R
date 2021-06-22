@@ -41,14 +41,34 @@ source("R/make_people_table.R")
 source("R/create_euts_table.R")
 
 # 8. skldfjdskl j ---------------------------------------------------------
-# source("R/.R")
 
+source("R/make_responses_tables.R")
 
 
 
 # 99. Tests -------------------------------------------------------------------
-## need to create  tests here for going back and editing the data in thebrain
-# source("R/run_tests.R")
+
+##  Need to make sure we have accounted for all the people, types, etc and that
+##  the only remaining links are Response -> Response
+if(any(links$ThoughtIdA %in% people$PersonId))warning("oops")
+if(any(links$ThoughtIdA %in% people$OrganizationId))warning("oops")
+if(any(links$ThoughtIdA %in% people$AffiliationId))warning("oops")
+
+if(any(links$ThoughtIdB %in% people$PersonId))warning("oops")
+if(any(links$ThoughtIdB %in% people$OrganizationId))warning("oops")
+if(any(links$ThoughtIdB %in% people$AffiliationId))warning("oops")
+
+if(any(links$ThoughtIdA %in% euts_to_jlb_interpreted$EndUserTypeId))warning("oops")
+if(any(links$ThoughtIdB %in% euts_to_jlb_interpreted$EndUserTypeId))warning("oops")
+
+if(any(links$ThoughtIdA %in% euts_to_paraphrased$EndUserTypeId))warning("oops")
+if(any(links$ThoughtIdB %in% euts_to_paraphrased$EndUserTypeId))warning("oops")
+
+if(any(links$ThoughtIdA %in% euts_to_paraphrased$EndUserTypeId))warning("oops")
+if(any(links$ThoughtIdB %in% euts_to_paraphrased$EndUserTypeId))warning("oops")
+
+
+# Export ------------------------------------------------------------------
 
 
 
