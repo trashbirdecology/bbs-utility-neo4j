@@ -44,6 +44,43 @@ source("R/create_euts_table.R")
 
 source("R/make_responses_tables.R")
 
+# 9. Make a big giant table -----------------------------------------------
+
+temp <- full_join(jlb_interpretations, euts_to_jlb_interpreted,
+          by=c("JlbId"="ChildNodeId")) %>%
+    select(-LinkId)
+
+# find the children of jlb responses
+jlb_chlidren <-
+links %>% filter(ThoughtIdA %in% jlb_interpretations$JlbId)
+
+links <- setdiff(links, jlb_chlidren) # remove those from links
+
+# find children of paraphrased responses
+para_children <-
+    links %>% filter(ThoughtIdA %in% paraphrased_responses$ParaId)
+
+links <- setdiff(links, para_children) # remove those from links
+
+## Join these children to jlb and para tables
+
+all(jlb_interpretations$JlbId %in% jlb_chlidren$ThoughtIdA )
+
+
+
+
+# TRASH -------------------------------------------------------------------
+
+
+# top level = $EndUserTypeId EUTS -> JLB or ETUS -> PARA
+# second level = JLB interpretation code JLB -> PARA
+# Third level  = paraphrased PARA -> RESPONSE
+# Fourth = Response RESPONSE -> RESPONSE or RESPONSE -> ~nothing~
+# Fifth = Response end
+
+# people - had response -> response
+# affiliation - had response -> response
+
 
 
 # 99. Tests -------------------------------------------------------------------

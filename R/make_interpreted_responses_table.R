@@ -1,4 +1,3 @@
-
 # Make tables for the noodes describing paraphrased responses and for JLB interp ----------------
 para.lookup.id <- nodes %>%
     filter(Kind==4) %>%
@@ -22,17 +21,24 @@ links <- setdiff(links, bind_rows(paraphrased_responses, jlb_interpretations))
 # Munge the names  --------------------------------------------------------
 paraphrased_responses <- paraphrased_responses %>%
     rename(Id=ThoughtIdA,
-           ChildNodeId=ThoughtIdB,
+           ParaId=ThoughtIdB,
            LinkId=Id) %>% select(-Meaning, -Relation)
 
+## Add the text from nodes to these links
+paraphrased_responses <- left_join(paraphrased_responses, nodes, by=c("ParaId"= "Id")) %>%
+    rename(ParaName = Name) %>%
+    select(ParaName, ParaId, TypeId)
 
-
-# Munge the names  --------------------------------------------------------
+# Munge the JLB interp  --------------------------------------------------------
 jlb_interpretations <- jlb_interpretations %>%
     rename(Id=ThoughtIdA,
-           ChildNodeId=ThoughtIdB,
-        LinkId=Id) %>% select(-Meaning, -Relation)
+           JlbId=ThoughtIdB,
+           LinkId=Id) %>% select(-Meaning, -Relation)
 
+## Add the text from nodes to these links
+jlb_interpretations <- left_join(jlb_interpretations, nodes, by=c("JlbId"= "Id")) %>%
+    rename(JlbName = Name) %>%
+    select(JlbName, JlbId, TypeId)
 
 
 
