@@ -14,13 +14,13 @@ euts <- full_join(euts.links, euts%>% select(Name, Id), by=c("ThoughtIdA"="Id"))
     select(-Relation, -Meaning)
 rm(euts.links)
 
-euts_to_paraphrased <- euts %>% filter(ChildNodeId %in% paraphrased_responses$ParaId)
-euts_to_jlb_interpreted <-euts %>% filter(!ChildNodeId %in% paraphrased_responses$ParaId)
-
-if(nrow(euts_to_jlb_interpreted)+nrow(euts_to_paraphrased) != nrow(euts))(warning("see line 20 create_euts_table"))
+# euts_to_paraphrased <- euts %>% filter(ChildNodeId %in% paraphrased_responses$ParaId)
+# euts_to_jlb_interpreted <-euts %>% filter(!ChildNodeId %in% paraphrased_responses$ParaId)
+#
+# if(nrow(euts_to_jlb_interpreted)+nrow(euts_to_paraphrased) != nrow(euts))(warning("see line 20 create_euts_table"))
 
 
 
 # Clear junk  -------------------------------------------------------------
-export <- c(paste(export), "euts_to_paraphrased", "euts_to_jlb_interpreted")
+export <- c(paste(export),"euts")
 rm(list=setdiff(ls(), export))

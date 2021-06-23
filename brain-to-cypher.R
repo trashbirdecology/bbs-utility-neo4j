@@ -36,40 +36,20 @@ source("R/make_interpreted_responses_table.R")
 # 6. Create table of people,orgs, and affiliations -----------------------------------------------
 source("R/make_people_table.R")
 
-
 # 7. Extract the top-level nodes EUTS (how i tried to type end users) --------------------------------------------
 source("R/create_euts_table.R")
 
-# 8. skldfjdskl j ---------------------------------------------------------
-
+# 8. Responses Table ---------------------------------------------------------
 source("R/make_responses_tables.R")
 
-# 9. Make a big giant table -----------------------------------------------
-
-temp <- full_join(jlb_interpretations, euts_to_jlb_interpreted,
-          by=c("JlbId"="ChildNodeId")) %>%
-    select(-LinkId)
-
-# find the children of jlb responses
-jlb_chlidren <-
-links %>% filter(ThoughtIdA %in% jlb_interpretations$JlbId)
-
-links <- setdiff(links, jlb_chlidren) # remove those from links
-
-# find children of paraphrased responses
-para_children <-
-    links %>% filter(ThoughtIdA %in% paraphrased_responses$ParaId)
-
-links <- setdiff(links, para_children) # remove those from links
-
-## Join these children to jlb and para tables
-
-all(jlb_interpretations$JlbId %in% jlb_chlidren$ThoughtIdA )
+# 9. Add the Question Names to Links that have "Response:..." tag -----------------------------------------------
+source("R/munge_responses_tables.R")
 
 
+# 10. Further munge euts-----------------------------------------------
+source("R/munge_euts.R")
 
-
-# TRASH -------------------------------------------------------------------
+# NOTES -------------------------------------------------------------------
 
 
 # top level = $EndUserTypeId EUTS -> JLB or ETUS -> PARA
@@ -94,15 +74,6 @@ if(any(links$ThoughtIdA %in% people$AffiliationId))warning("oops")
 if(any(links$ThoughtIdB %in% people$PersonId))warning("oops")
 if(any(links$ThoughtIdB %in% people$OrganizationId))warning("oops")
 if(any(links$ThoughtIdB %in% people$AffiliationId))warning("oops")
-
-if(any(links$ThoughtIdA %in% euts_to_jlb_interpreted$EndUserTypeId))warning("oops")
-if(any(links$ThoughtIdB %in% euts_to_jlb_interpreted$EndUserTypeId))warning("oops")
-
-if(any(links$ThoughtIdA %in% euts_to_paraphrased$EndUserTypeId))warning("oops")
-if(any(links$ThoughtIdB %in% euts_to_paraphrased$EndUserTypeId))warning("oops")
-
-if(any(links$ThoughtIdA %in% euts_to_paraphrased$EndUserTypeId))warning("oops")
-if(any(links$ThoughtIdB %in% euts_to_paraphrased$EndUserTypeId))warning("oops")
 
 
 # Export ------------------------------------------------------------------

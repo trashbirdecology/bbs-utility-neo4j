@@ -9,6 +9,8 @@ for(i in seq_along(export)){
     # write to OneDrive wd for backup
     write.csv(df, paste0(data.out, export[i], ".csv"))
     # write_json(df, paste0("data/", export[i],".json"))
+    message(export[i]," successfully saved to ", data.out)
+
 }
 
 ## Clean up all extra objects in case I wnat to source this script. from elsewhere to ping the links and nodes.
