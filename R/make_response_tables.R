@@ -1,27 +1,24 @@
-# # Actual responses by people ----------------------------------------------
-# # Next, grab all the links describing org-ppl relations
-# ## this grabs the links where the person has that response
+# Pull out the actual responses by people ----------------------------------------------
 individual_responses <- links %>% filter(ThoughtIdA %in% people$PersonId)
 
 # Responses attributed to affiliations  -----------------------------------
 affiliation_responses <- links %>% filter(ThoughtIdA %in% unique(people$AffiliationId))
-## remove from links
+## remove both response tables from links
 links <- setdiff(links, bind_rows(affiliation_responses, individual_responses))
 
 
-# Add names to tables -----------------------------------------------------
+# Add node Names to each table -----------------------------------------------------
 affiliation_responses <- affiliation_responses %>%
-    select(ThoughtIdA, ThoughtIdB, Id) %>%
+    select(ThoughtIdA, ThoughtIdB) %>%
     rename(AffiliationId  = ThoughtIdA,
-           LinkId = Id,
+           # LinkId = Id,
            ChildNodeId = ThoughtIdB) %>%
         left_join(people %>% select(AffiliationId, AffiliationName))
 
-
 individual_responses <- individual_responses %>%
-    select(ThoughtIdA, ThoughtIdB, Id) %>%
+    select(ThoughtIdA, ThoughtIdB) %>%
     rename(PersonId  = ThoughtIdA,
-           LinkId = Id,
+           # LinkId = Id,
            ChildNodeId = ThoughtIdB) %>%
     left_join(people %>% select(PersonId, PersonName))
 

@@ -1,6 +1,6 @@
 rm(list=ls())
 # P. Setup -------------------------------------------------------------------
-date = "20210622" # for grabbing files. choose most rrecent or preferred brain export dump
+date = "20210623" # for grabbing files. choose most rrecent or preferred brain export dump
 # initialize vector for storing export object names of interest.
 export <- c("data.in", "data.out")
 
@@ -31,7 +31,7 @@ source("R/munge_brain.R")
 source("R/make_questions_table.R")
 
 # 5. Extract the interpreted and paraphrased responses -------------------------------------------------------------------------
-source("R/make_interpreted_responses_table.R")
+source("R/make_interpreted_response_tables.R")
 
 # 6. Create table of people,orgs, and affiliations -----------------------------------------------
 source("R/make_people_table.R")
@@ -39,15 +39,16 @@ source("R/make_people_table.R")
 # 7. Extract the top-level nodes EUTS (how i tried to type end users) --------------------------------------------
 source("R/create_euts_table.R")
 
-# 8. Responses Table ---------------------------------------------------------
-source("R/make_responses_tables.R")
+# 8. Responses Tables ---------------------------------------------------------
+source("R/make_response_tables.R")
+
 
 # 9. Add the Question Names to Links that have "Response:..." tag -----------------------------------------------
-source("R/munge_responses_tables.R")
+source("R/munge_response_tables.R")
+source("R/munge_links.R")
 
-
-# 10. Further munge euts-----------------------------------------------
-source("R/munge_euts.R")
+# 10. Further munge euts to add para and jlb children...-----------------------------------------------
+# source("R/para_to_response.R")
 
 # NOTES -------------------------------------------------------------------
 

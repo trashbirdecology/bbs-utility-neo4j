@@ -3,11 +3,12 @@
 # Assign orgs and affiliations to people ----------------------------------------
 bbs_affiliations.lookup <- nodes %>%
     filter(Kind==4) %>%
+    filter(!str_detect(Name, "(?i)org")) %>%
     filter(str_detect(Name, "(?i)bbs"))
 
 organizations.lookup <- nodes %>%
     filter(Kind==4) %>%
-    filter(str_detect(Name, c("(?i)academ|cws|usgs|fws|agency|dept.|agenc")))
+    filter(str_detect(Name, c("(?i)academ|cws|usgs|fws|agency|dept.|agenc|bbs")))
 
 ## Remove from NODES
 nodes <- setdiff(nodes, bind_rows(organizations.lookup, bbs_affiliations.lookup))
@@ -35,6 +36,7 @@ affiliation.links <- affiliation.links %>% select(ThoughtIdA, ThoughtIdB) %>%
 ## Add affiliation names to affiliation links
 affiliations <- full_join(affiliation.links, bbs_affiliations.lookup %>% select(Name,Id), by=c("AffiliationId"="Id")) %>%
     rename(AffiliationName=Name)
+
 rm(affiliation.links, bbs_affiliations.lookup)
 
 
@@ -59,9 +61,19 @@ organizations <- left_join(organizations.links, organizations.lookup %>% select(
 people <- full_join(people %>% rename(PersonName=Name, PersonId=Id), organizations)
 
 ## Finally, append affiliations to the people
-
 people <- full_join(people, affiliations)
 
+## Manually edit the academic folx
+people <- people %>%
+    mutate(AffiliationId = case_when(is.na(AffiliationId) ~ "999999999X", !is.na(AffiliationId)~AffiliationId),
+              AffiliationName = case_when(is.na(AffiliationName) ~ "Academia", !is.na(AffiliationId)~AffiliationName)
+    )
+
+
+
+
+
+# A test --------------------------------------------------------------------
 
 if(any(people$OrganizationId %in%links$ThoughtIdA)  |
    any(people$OrganizationId %in%links$ThoughtIdB)  |

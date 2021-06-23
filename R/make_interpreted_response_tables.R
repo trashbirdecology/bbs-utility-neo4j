@@ -20,27 +20,21 @@ links <- setdiff(links, bind_rows(para_responses, jlb_interpretations))
 
 # MUNGE JLB interp ---------------------------------------------------------------
 jlb_interpretations <- jlb_interpretations %>%
-    rename(Id=ThoughtIdA,
+    rename(
            JlbId=ThoughtIdB,
-           LinkId=Id) %>% select(-Meaning, -Relation)
-
+           LinkId=Id) %>% select(-Meaning, -Relation, -ThoughtIdA)
 ## Add the text from nodes to these links
+
 jlb_interpretations <- left_join(jlb_interpretations, nodes, by=c("JlbId"= "Id")) %>%
     rename(JlbName = Name) %>%
     select(JlbName, JlbId, TypeId)
 
 
-
-# jlb_interp_lookup <- full_join(jlb_interpretations,
-#                                euts_to_jlb_interpreted,
-#                                by=c("JlbId"="ChildNodeId")) %>%
-#     select(-LinkId, -TypeId)
-
 # find the children of jlb responses
 jlb_children <-
     links %>% filter(ThoughtIdA %in% jlb_interpretations$JlbId)
-
-links <- setdiff(links, jlb_children) # remove those from links
+# remove those from links
+    links <- setdiff(links, jlb_children)
 
 ## Join these children to jlb and para tables
 jlb_children <- left_join(jlb_interpretations, jlb_children, by=c("JlbId"="ThoughtIdA")) %>%
@@ -49,8 +43,8 @@ jlb_children <- left_join(jlb_interpretations, jlb_children, by=c("JlbId"="Thoug
 
 ## Add ChildName to table
 jlb_table <- left_join(jlb_children, nodes %>% select(Name, Id), by=c("ThoughtIdB"="Id")) %>%
-    rename(ChildId = ThoughtIdB,
-           ChildName = Name)
+    rename(JlbChildId = ThoughtIdB,
+           JlbChildName = Name)
 
 
 # MUNGE PARA interp ---------------------------------------------------------------
@@ -66,7 +60,8 @@ para_responses <- left_join(para_responses, nodes, by=c("ParaId"= "Id")) %>%
 
 para_children <-
     links %>% filter(ThoughtIdA %in% para_responses$ParaId)
-links <- setdiff(links, para_children) # remove those from links
+# remove those from links
+    links <- setdiff(links, para_children)
 
 ## Join these children to jlb and para tables
 para_children <- left_join(para_responses, para_children, by=c("ParaId"="ThoughtIdA")) %>%
@@ -74,13 +69,21 @@ para_children <- left_join(para_responses, para_children, by=c("ParaId"="Thought
 
 ## Add ChildName to table
 para_table <- left_join(para_children, nodes %>% select(Name, Id), by=c("ThoughtIdB"="Id")) %>%
-    rename(ChildId = ThoughtIdB,
-           ChildName = Name)
+    rename(ParaChildId = ThoughtIdB,
+           ParaChildName = Name)
+
+
+# Identify the JLB->Paraphrase links------------------------------------------------------
+
+jlb_to_para_table <- para_table %>% filter(ParaId %in% jlb_table$JlbChildId) %>%
+    select(ParaName, ParaId) %>%
+    mutate(JlbChildId = ParaId) %>% left_join(jlb_table) %>%
+    select(JlbId, ParaId)
 
 
 
 # Save objs to export -----------------------------------------------------
-export <- c(paste(export), "para_table", "jlb_table")
+export <- c(paste(export), "para_table", "jlb_table", "jlb_to_para_table")
 
 # remove all else from mem
 rm(list=setdiff(ls(), export))
