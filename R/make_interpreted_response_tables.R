@@ -1,88 +1,83 @@
-# Make tables for the noodes describing paraphrased responses and for JLB interp ----------------
-para.lookup.id <- nodes %>%
-    filter(Kind==4) %>%
-    filter(str_detect(Name, "(?i)paraphrase"))
-
-jlb.lookup.id <- nodes %>%
-    filter(Kind==4) %>%
-    filter(str_detect(Name, "(?i)jlb" ))
-
-## Remove these from NODES
-nodes <- setdiff(nodes, bind_rows(jlb.lookup.id, para.lookup.id))
-
-# grab all the nodes that have the paraphrased tags
-para_responses <- links %>% filter(ThoughtIdA %in% para.lookup.id)
-# grab all the nodes that have the JLB tags
-jlb_interpretations <- links %>% filter(ThoughtIdA %in% jlb.lookup.id)
-
-## remove all these from LINKS
-links <- setdiff(links, bind_rows(para_responses, jlb_interpretations))
-
-# MUNGE JLB interp ---------------------------------------------------------------
-jlb_interpretations <- jlb_interpretations %>%
-    rename(
-           JlbId=ThoughtIdB,
-           LinkId=Id) %>% select(-Meaning, -Relation, -ThoughtIdA)
-## Add the text from nodes to these links
-jlb_interpretations <- left_join(jlb_interpretations, nodes, by=c("JlbId"= "Id")) %>%
-    rename(JlbName = Name) %>%
-    select(JlbName, JlbId, TypeId)
+# Make tables for the noodes describing paraphrased responses and for JLB interp
 
 
-# find the children of jlb responses
-jlb_children <-
-    links %>% filter(ThoughtIdA %in% jlb_interpretations$JlbId)
-# remove those from links
-    links <- setdiff(links, jlb_children)
+# Paraphrased Responses ---------------------------------------------------
+para_ids <- links.full %>% filter(ThoughtIdA %in% para.lookup.id$ParaId) %>%
+    select(ThoughtIdB) %>% rename(ParaId = ThoughtIdB)
 
-## Join these children to jlb and para tables
-jlb_children <- left_join(jlb_interpretations, jlb_children, by=c("JlbId"="ThoughtIdA")) %>%
-    select(-Id, -Meaning, -Relation)
+# these are all the links where a paraphrased category/phrase is the parent
+para_links <- links.full %>% filter(ThoughtIdA %in% para_ids$ParaId)
+
+unique(para_links$TypeId.Child)
 
 
-## Add ChildName to table
-jlb_table <- left_join(jlb_children, nodes %>% select(Name, Id),
-                       by=c("ThoughtIdB"="Id")) %>%
-    rename(JlbChildId = ThoughtIdB,
-           JlbChildName = Name) %>%
-    relocate(JlbName, JlbChildName)
+
+# # grab all the nodes which have a "JLB interpretation" tag on it.
+# jlb_ids <- links %>% filter(ThoughtIdA %in% jlb.lookup.id$JlbId) %>%
+#     select(ThoughtIdB) %>% rename(JlbId = ThoughtIdB)
+#
+# # Make a table for jlb --> paraphrased responses
+# jlb_to_para <- links %>% filter(ThoughtIdA %in% jlb_ids$JlbId & ThoughtIdB %in% para_ids$ParaId)
+# ## remove these from links
+# links <- setdiff(links, jlb_to_para)
+#
+# # links <- links %>%
+# #     filter(!ThoughtIdB %in% jlb_ids$JlbId) %>%
+# #     filter(!ThoughtIdB %in% para_ids$ParaId)
+#
+#
+# # next, grab all the links where jlb_ids and para_ids are parent ----------------
+# jlb_interpretations <- links %>% filter(ThoughtIdA %in% jlb_ids$JlbId)
+# para_responses <- links %>% filter(ThoughtIdA %in% para_ids$ParaId)
+#
+# ## remove these links from links df
+# links <- setdiff(links, bind_rows(jlb_interpretations, para_responses))
+#
+# # MUNGE JLB interp ---------------------------------------------------------------
+# jlb_interpretations <- jlb_interpretations %>%
+#     rename(JlbId = ThoughtIdA,
+#             JlbChildId  = ThoughtIdB,
+#            LinkId = Id) %>%
+#     select(-Meaning,-Relation)
+#
+# ## Add the text from nodes to the JLB id (parent)
+# jlb_interpretations <- left_join(jlb_interpretations, nodes, by=c("JlbId"= "Id")) %>%
+#     rename(JlbName = Name) %>%
+#     select(JlbName, JlbId, TypeId, JlbChildId)
+#
+# ## Add text from nodes to the child node
+# jlb_table <- left_join(jlb_interpretations, nodes, by=c("JlbChildId"= "Id")) %>%
+#     rename(JlbChildName = Name) %>%
+#     select(JlbName, JlbChildName,  JlbId, JlbChildId)
+#
+# if(any(links$ThoughtIdA %in% jlb_table$JlbId))warning("see line 44 in make_interppreted_response_tables.r")
+#
+
+
+
+
 
 # MUNGE PARA interp ---------------------------------------------------------------
 para_responses <- para_responses %>%
-    rename(Id=ThoughtIdA,
-           ParaId=ThoughtIdB,
-           LinkId=Id) %>% select(-Meaning, -Relation)
-## Add the text from nodes to these links
+    rename(ParaId = ThoughtIdA,
+           ParaChildId  = ThoughtIdB,
+           LinkId = Id) %>%
+    select(-Meaning,-Relation)
+
+## Add the text from nodes to the JLB id (parent)
 para_responses <- left_join(para_responses, nodes, by=c("ParaId"= "Id")) %>%
     rename(ParaName = Name) %>%
-    select(ParaName, ParaId, TypeId)
+    select(ParaName, ParaId, TypeId, ParaChildId)
 
+## Add text from nodes to the child node
+para_table <- left_join(para_responses, nodes, by=c("ParaChildId"= "Id")) %>%
+    rename(ParaChildName = Name) %>%
+    select(ParaName, ParaChildName,  ParaId, ParaChildId)
 
-para_children <-
-    links %>% filter(ThoughtIdA %in% para_responses$ParaId)
-# remove those from links
-links <- setdiff(links, para_children)
-
-## Join these children to jlb and para tables
-para_children <- left_join(para_responses, para_children, by=c("ParaId"="ThoughtIdA")) %>%
-    select(-Id, -Meaning, -Relation)
-
-## Add ChildName to table
-para_table <- left_join(para_children, nodes %>% select(Name, Id), by=c("ThoughtIdB"="Id")) %>%
-    rename(ParaChildId = ThoughtIdB,
-           ParaChildName = Name)%>%
-    relocate(ParaName, ParaChildName)
-
+if(any(links$ThoughtIdA %in% para_table$ParaId))warning("see line 44 in make_interppreted_response_tables.r")
 
 
 # Identify the JLB->Paraphrase links------------------------------------------------------
-jlb_to_para_table <-
-    para_table %>%
-    filter(ParaId %in% jlb_table$JlbChildId) %>%
-    select(ParaName, ParaId) %>%
-    mutate(JlbChildId = ParaId) %>%
-    left_join(jlb_table) %>%
-    select(JlbId, ParaId)
 
 
 

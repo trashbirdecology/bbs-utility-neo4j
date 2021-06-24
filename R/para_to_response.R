@@ -1,8 +1,7 @@
 
-
 # Create df for paraphrases linked to indivudal and affiliation re --------
-links %>% filter(ParentResponseId %in% jlb_table$JlbId)
-links %>% filter(ChildResponseId %in% jlb_table$JlbId)
+links %>% filter(ThoughtIdA %in% jlb_table$JlbId)
+links %>% filter(ThoughtIdB %in% jlb_table$JlbId)
 
 
 

@@ -1,6 +1,6 @@
 rm(list=ls())
 # P. Setup -------------------------------------------------------------------
-date = "20210623" # for grabbing files. choose most rrecent or preferred brain export dump
+date = "20210624" # for grabbing files. choose most rrecent or preferred brain export dump
 # initialize vector for storing export object names of interest.
 export <- c("data.in", "data.out")
 
@@ -23,18 +23,15 @@ source("R/import_json_from_brain.R")
 ## Lightly munges the links and nodes data frames.
 source("R/munge_brain.R")
 
-# 3. Add brain metadata ------------------------------------------------------
-## I am not currently running this because its not really needed.
-# source("R/add_brain_metadata.R")
 
 # 4. Extract questions ------------------------------------------------------
 source("R/make_questions_table.R")
 
-# 5. Extract the interpreted and paraphrased responses -------------------------------------------------------------------------
-source("R/make_interpreted_response_tables.R")
-
-# 6. Create table of people,orgs, and affiliations -----------------------------------------------
+# 5. Create table of people,orgs, and affiliations -----------------------------------------------
 source("R/make_people_table.R")
+
+# 6. Extract the interpreted and paraphrased responses -------------------------------------------------------------------------
+source("R/make_interpreted_response_tables.R")
 
 # 7. Extract the top-level nodes EUTS (how i tried to type end users) --------------------------------------------
 source("R/create_euts_tables.R")
@@ -48,6 +45,13 @@ source("R/make_response_tag_link_tables.R")
 
 # 10. Handle remaining links --------------------------------------------------
 source("R/make_resp_to_resp_table.R")
+
+
+# 11. Para to response ----------------------------------------------------
+
+
+
+# 12. Jlb to Response -----------------------------------------------------
 
 
 

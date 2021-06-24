@@ -13,12 +13,11 @@ organizations.lookup <- nodes %>%
 ## Remove from NODES
 nodes <- setdiff(nodes, bind_rows(organizations.lookup, bbs_affiliations.lookup))
 
-## Next I will create the people table and use lookups to add some labels
-
 # People nodes and links ---------------------------------
 # any remaining nodes swith Kind =4 should be only people..
 people <- nodes %>%
     filter(Kind==4)
+
 ## remove these from NODES
 nodes <- setdiff(nodes, people)
 # Only need NAme and ID
@@ -27,9 +26,10 @@ people <- people %>% select(Name, Id)
 # Assign affiliations  to the people ------------------------------------------
 # These are all the links assigned to BBS Stakeholders oor Employees
 affiliation.links <-
-    links %>% filter(ThoughtIdA %in% bbs_affiliations.lookup$Id &
+    links.full %>% filter(ThoughtIdA %in% bbs_affiliations.lookup$Id &
                      ThoughtIdB %in% people$Id)
-links <- setdiff(links, affiliation.links)
+
+links.full <- setdiff(links.full, affiliation.links)
 ## munge
 affiliation.links <- affiliation.links %>% select(ThoughtIdA, ThoughtIdB) %>%
     rename(AffiliationId=ThoughtIdA, PersonId=ThoughtIdB)
@@ -37,17 +37,13 @@ affiliation.links <- affiliation.links %>% select(ThoughtIdA, ThoughtIdB) %>%
 affiliations <- full_join(affiliation.links, bbs_affiliations.lookup %>% select(Name,Id), by=c("AffiliationId"="Id")) %>%
     rename(AffiliationName=Name)
 
-rm(affiliation.links, bbs_affiliations.lookup)
-
-
-
 # Assign  organizations to the people ------------------------------------------
 # These are all the links assigned to BBS Stakeholders oor Employees
 organizations.links <-
-    links %>% filter(ThoughtIdA %in% organizations.lookup$Id &
+    links.full %>% filter(ThoughtIdA %in% organizations.lookup$Id &
                          ThoughtIdB %in% people$Id)
 # Remove from links
-links <- setdiff(links, organizations.links)
+links.full <- setdiff(links.full, organizations.links)
 # Munge for easy joining
 organizations.links <- organizations.links %>% select(ThoughtIdA, ThoughtIdB) %>%
     rename(OrganizationId = ThoughtIdA,
@@ -70,18 +66,25 @@ people <- people %>%
     )
 
 
+# Pull out the codes for paraphrases and JLB interp -----------------------
+para.lookup.id <- people %>%
+    filter(str_detect(PersonName, "(?i)paraphrase")) %>%
+    rename(ParaId = PersonId)
 
+jlb.lookup.id <- people %>%
+    filter(str_detect(PersonName, "(?i)jlb" )) %>%
+    rename(JlbId = PersonId)
+
+# remove these from people tbl
+people <- people %>% filter(!PersonId %in% c(para.lookup.id$ParaId, jlb.lookup.id$JlbId))
 
 
 # A test --------------------------------------------------------------------
 
-if(any(people$OrganizationId %in%links$ThoughtIdA)  |
-   any(people$OrganizationId %in%links$ThoughtIdB)  |
-   any(people$PersonId %in%links$ThoughtIdB)
+if(any(people$OrganizationId %in%links.full$ThoughtIdA)  |
+   any(people$OrganizationId %in%links.full$ThoughtIdB)  |
+   any(people$PersonId %in%links.full$ThoughtIdB)
    )warning("Check out make_tags_table around line 86")
-
-
-
 
 
 
@@ -89,10 +92,6 @@ if(any(people$OrganizationId %in%links$ThoughtIdA)  |
 export <- c(paste(export), "people")
 
 # remove all else from mem
-rm(list=setdiff(ls(), export))
+rm(list=setdiff(ls(), c(export, "para.lookup.id", "jlb.lookup.id")))
 
-# End run -----------------------------------------------------------------
-
-
-
-
+# End run ----------------------------------------------------------------

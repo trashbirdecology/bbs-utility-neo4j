@@ -1,16 +1,14 @@
 # Create a table for response lookup, or the questions that responses might be tagged with
-
 questions <- nodes %>%
     filter(Kind==4) %>%
     filter(str_detect(Name, "Response"))
 
-# Remove these from the nodes table ---------------------------------------
-nodes <- setdiff(nodes, questions)
-
 
 # Munge questionsm df -----------------------------------------------------
-
 questions <- questions %>% select(Name, Id)
+
+# Remove these from nodes for easy people table making --------------------
+nodes <- nodes %>% filter(!Id %in% questions$Id)
 
 # Save objs to export -----------------------------------------------------
 export <- c(paste(export), "questions")

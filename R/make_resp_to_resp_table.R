@@ -7,8 +7,7 @@ if(any(links$ThoughtIdA %in% c(jlb_to_para_table$JlbId, jlb_to_para_table$ParaId
 # Munge remaining links ----------------------------------------------------------------------
 links <- links %>% select(ThoughtIdA, ThoughtIdB)
 
-
- # nodes %>% select(Name, Id)
+### remaining should be only response to response
 resp_to_resp_table <- links %>% left_join(nodes %>% select(Name, Id), by=c("ThoughtIdA"="Id")) %>%
     rename(ParentResponseId = ThoughtIdA, ParentResponseName=Name)
 resp_to_resp_table <- resp_to_resp_table %>% left_join(nodes %>% select(Name, Id), by=c("ThoughtIdB"="Id")) %>%
