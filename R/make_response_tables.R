@@ -1,33 +1,59 @@
-# Pull out the actual responses by people ----------------------------------------------
-individual_responses <- links %>% filter(ThoughtIdA %in% people$PersonId)
+# Individual responses----------------------------------------------
+individual_responses <- links %>%
+    filter(ThoughtIdA %in% people$PersonId)
+# remove from links
+links <- setdiff(links, individual_responses)
 
-# Responses attributed to affiliations  -----------------------------------
-affiliation_responses <- links %>% filter(ThoughtIdA %in% unique(people$AffiliationId))
-## remove both response tables from links
-links <- setdiff(links, bind_rows(affiliation_responses, individual_responses))
-
-
-# Add node Names to each table -----------------------------------------------------
-affiliation_responses <- affiliation_responses %>%
-    select(ThoughtIdA, ThoughtIdB) %>%
-    rename(AffiliationId  = ThoughtIdA,
-           # LinkId = Id,
-           ChildNodeId = ThoughtIdB) %>%
-        left_join(people %>% select(AffiliationId, AffiliationName))
-
+# Munge indiv. responses
 individual_responses <- individual_responses %>%
     select(ThoughtIdA, ThoughtIdB) %>%
-    rename(PersonId  = ThoughtIdA,
-           # LinkId = Id,
-           ChildNodeId = ThoughtIdB) %>%
-    left_join(people %>% select(PersonId, PersonName))
+    rename(PersonId=ThoughtIdA,
+           PersonResponseId=ThoughtIdB)
 
 
 
-# Add the response text to each table now ---------------------------------
-affiliation_responses <- left_join(affiliation_responses, nodes %>% select(Id, Name), by=c("ChildNodeId"="Id")) %>%
-    distinct(ChildNodeId, AffiliationId, .keep_all=TRUE)
-individual_responses <- left_join(individual_responses, nodes %>% select(Id, Name), by=c("ChildNodeId"="Id"))
+# Individual responses----------------------------------------------
+affiliation_responses <- links %>%
+    filter(ThoughtIdA %in% people$AffiliationId)
+# remove from links
+links <- setdiff(links, affiliation_responses)
+
+# Munge indiv. responses
+affiliation_responses <- affiliation_responses %>%
+    select(ThoughtIdA, ThoughtIdB) %>%
+    rename(AffiliationId=ThoughtIdA,
+           AffiliationResponseId=ThoughtIdB)
+
+
+# Munge individual responses -----------------------------------------------------
+# add names
+individual_responses <- individual_responses %>%
+            left_join(people %>% select(PersonId, PersonName))
+
+# add names to responses
+individual_responses <- individual_responses %>%
+    left_join(nodes %>% select(Id,Name), by=c("PersonResponseId"="Id")) %>%
+    rename(PersonResponseName=Name)
+
+if(any(is.na(individual_responses$PersonResponseName))) warning("see line 34 of make_response_tables.r")
+
+
+
+
+
+# Munge affiliation responses -----------------------------------------------------
+# add names
+affiliation_responses <- affiliation_responses %>%
+    left_join(people %>% select(AffiliationId, AffiliationName))
+
+# add names to responses
+affiliation_responses <- affiliation_responses %>%
+    left_join(nodes %>% select(Id,Name), by=c("AffiliationResponseId"="Id")) %>%
+    rename(AffiliationResponseName=Name)
+
+if(any(is.na(affiliation_responses$AffiliationResponseName))) warning("see line 34 of make_response_tables.r")
+
+
 
 
 # Save objs to export -----------------------------------------------------

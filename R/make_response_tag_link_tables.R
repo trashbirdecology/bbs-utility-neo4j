@@ -1,8 +1,13 @@
-# Links with question/response tags ------------------------------------------------
-## Grab the links that have response tags.
+# Grab the links that have response tags. ------------------------------------------------
 resp_with_question_tag <- links %>% filter(Meaning==5)
-    #remove from links
-    links <- setdiff(links, resp_with_question_tag)
+if(!all(resp_with_question_tag$ThoughtIdA %in% questions$Id)) warning("see line 4 make_response_tag_link_tables.R")
+
+#remove these from links
+links <- setdiff(links, resp_with_question_tag)
+
+
+
+# Munge table -------------------------------------------------------------
 
 ## Add the text (name) to ThoguhtIdA (the question)
 resp_with_question_tag <- resp_with_question_tag %>%

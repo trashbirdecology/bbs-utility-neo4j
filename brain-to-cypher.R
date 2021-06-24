@@ -37,18 +37,19 @@ source("R/make_interpreted_response_tables.R")
 source("R/make_people_table.R")
 
 # 7. Extract the top-level nodes EUTS (how i tried to type end users) --------------------------------------------
-source("R/create_euts_table.R")
+source("R/create_euts_tables.R")
 
 # 8. Responses Tables ---------------------------------------------------------
 source("R/make_response_tables.R")
 
 
 # 9. Add the Question Names to Links that have "Response:..." tag -----------------------------------------------
-source("R/munge_response_tables.R")
-source("R/munge_links.R")
+source("R/make_response_tag_link_tables.R")
 
-# 10. Further munge euts to add para and jlb children...-----------------------------------------------
-# source("R/para_to_response.R")
+# 10. Handle remaining links --------------------------------------------------
+source("R/make_resp_to_resp_table.R")
+
+
 
 # NOTES -------------------------------------------------------------------
 
