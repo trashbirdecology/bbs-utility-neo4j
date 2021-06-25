@@ -70,8 +70,17 @@ if(any(links$ThoughtIdB %in% people$OrganizationId))warning("oops")
 if(any(links$ThoughtIdB %in% people$AffiliationId))warning("oops")
 
 
+
+
+# Munge colnames in each df for easy cypher coding for jlb ----------------
+source("R/munge_tables_for_cypher.R")
+
+
 # Export ------------------------------------------------------------------
 
 source("R/export_files_for_neo4j.r")
 
 # 999.END RUN -----------------------------------------------------------------
+
+
+print(export)

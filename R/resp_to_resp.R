@@ -42,13 +42,25 @@ links.test <- links.test %>%
     ))
 
 
-## the remaining links are also resp resp to resp..
 
-links.test
+# Some remaining links are resp->para  ------------------------------------
+resp_to_para <- links %>%
+    filter(ThoughtIdB %in% c(para_to_resp$ThoughtIdA) &
+               !ThoughtIdA %in% c(euts_to_jlb$TypeId.Parent, euts_to_para$TypeId.Parent))
 
 
-# Save objs to export -----------------------------------------------------
-export <- c(paste(export), "resp_to_resp")
+### see what's remaining
+t=links.test %>% select(ThoughtIdA, ThoughtIdB)
+t2=resp_to_para %>% select(ThoughtIdA, ThoughtIdB)
+links.test <- setdiff(t, t2)
+
+
+
+# This last one, for now, is resp to jlb ----------------------------------
+resp_to_jlb <- links.test %>% left_join(links)
+
+ # Save objs to export -----------------------------------------------------
+export <- c(paste(export), "resp_to_resp", "resp_to_para", "resp_to_jlb")
 
 # remove all else from mem
 rm(list=setdiff(ls(), export))
