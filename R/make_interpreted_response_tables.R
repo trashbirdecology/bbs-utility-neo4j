@@ -5,10 +5,9 @@
 para_ids <- links.full %>% filter(ThoughtIdA %in% para.lookup.id$ParaId) %>%
     select(ThoughtIdB) %>% rename(ParaId = ThoughtIdB)
 
-# these are all the links where a paraphrased category/phrase is the parent
+#these are all the links where a paraphrased category/phrase is the parent
 para_links <- links.full %>% filter(ThoughtIdA %in% para_ids$ParaId)
 
-unique(para_links$TypeId.Child)
 
 
 

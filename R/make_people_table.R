@@ -26,10 +26,10 @@ people <- people %>% select(Name, Id)
 # Assign affiliations  to the people ------------------------------------------
 # These are all the links assigned to BBS Stakeholders oor Employees
 affiliation.links <-
-    links.full %>% filter(ThoughtIdA %in% bbs_affiliations.lookup$Id &
+    links %>% filter(ThoughtIdA %in% bbs_affiliations.lookup$Id &
                      ThoughtIdB %in% people$Id)
 
-links.full <- setdiff(links.full, affiliation.links)
+links <- setdiff(links, affiliation.links)
 ## munge
 affiliation.links <- affiliation.links %>% select(ThoughtIdA, ThoughtIdB) %>%
     rename(AffiliationId=ThoughtIdA, PersonId=ThoughtIdB)
@@ -40,10 +40,10 @@ affiliations <- full_join(affiliation.links, bbs_affiliations.lookup %>% select(
 # Assign  organizations to the people ------------------------------------------
 # These are all the links assigned to BBS Stakeholders oor Employees
 organizations.links <-
-    links.full %>% filter(ThoughtIdA %in% organizations.lookup$Id &
+    links %>% filter(ThoughtIdA %in% organizations.lookup$Id &
                          ThoughtIdB %in% people$Id)
 # Remove from links
-links.full <- setdiff(links.full, organizations.links)
+links <- setdiff(links, organizations.links)
 # Munge for easy joining
 organizations.links <- organizations.links %>% select(ThoughtIdA, ThoughtIdB) %>%
     rename(OrganizationId = ThoughtIdA,
@@ -81,9 +81,9 @@ people <- people %>% filter(!PersonId %in% c(para.lookup.id$ParaId, jlb.lookup.i
 
 # A test --------------------------------------------------------------------
 
-if(any(people$OrganizationId %in%links.full$ThoughtIdA)  |
-   any(people$OrganizationId %in%links.full$ThoughtIdB)  |
-   any(people$PersonId %in%links.full$ThoughtIdB)
+if(any(people$OrganizationId %in%links$ThoughtIdA)  |
+   any(people$OrganizationId %in%links$ThoughtIdB)  |
+   any(people$PersonId %in%links$ThoughtIdB)
    )warning("Check out make_tags_table around line 86")
 
 
@@ -95,3 +95,4 @@ export <- c(paste(export), "people")
 rm(list=setdiff(ls(), c(export, "para.lookup.id", "jlb.lookup.id")))
 
 # End run ----------------------------------------------------------------
+
