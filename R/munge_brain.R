@@ -45,8 +45,10 @@ euts <- type_ids %>% left_join(nodes %>% select(Id, Name)) %>%
 # Add end user type names to the links df -------------------------------------------------------------------------
 links <- links.full %>% left_join(euts, by=c("TypeId.Parent"="Id")) %>% left_join(euts, by=c("TypeId.Child"="Id"), suffix=c(".Parent",".Child"))
 
-
-
+# reorder cols
+links <- links %>% relocate(Name.Parent, Name.Child,
+                   TypeName.Parent, TypeName.Child,
+                   Label.Parent, Label.Child)
 
 
 # Save objs to export -----------------------------------------------------

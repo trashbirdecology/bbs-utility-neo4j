@@ -1,6 +1,6 @@
 rm(list=ls())
 # P. Setup -------------------------------------------------------------------
-date = "20210624" # for grabbing files. choose most rrecent or preferred brain export dump
+date = "20210625" # for grabbing files. choose most rrecent or preferred brain export dump
 # initialize vector for storing export object names of interest.
 export <- c("data.in", "data.out")
 
@@ -31,7 +31,7 @@ source("R/make_questions_table.R")
 source("R/make_people_table.R")
 
 # 6. Extract the interpreted and paraphrased responses -------------------------------------------------------------------------
-source("R/make_interpreted_response_tables.R")
+source("R/make_jlb_para_tables.R")
 
 # 7. Extract the top-level nodes EUTS (how i tried to type end users) --------------------------------------------
 source("R/create_euts_tables.R")
