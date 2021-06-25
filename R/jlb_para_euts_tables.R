@@ -9,7 +9,6 @@ para_links <- links %>% filter(ThoughtIdA %in% para_ids$ParaId)
 ## remove from links df
 links <- setdiff(links, para_links)
 
-
 # JLB responses -----------------------------------------------------------
 jlb_ids <- links %>% filter(ThoughtIdA %in% jlb.lookup.id$JlbId) %>%
     select(ThoughtIdB) %>% rename(JlbId = ThoughtIdB)
@@ -21,8 +20,8 @@ jlb_links <- links %>% filter(ThoughtIdA %in% jlb_ids$JlbId)
 links <- setdiff(links, jlb_links)
 
 
-
-
+# Finally, remove the jlb and para lookup definitions  (jlb main - --------
+links <- links %>% filter(!ThoughtIdA %in% c(para.lookup.id$ParaId, jlb.lookup.id$JlbId))
 
 
 # EUTS TO JLB -------------------------------------------------------------
@@ -44,12 +43,8 @@ jlb_to_para <- jlb_links %>% filter(ThoughtIdB %in% para_ids$ParaId)
 jlb_to_resp <- setdiff(jlb_links, jlb_to_para)
 
 
-
 # PARA TO RESP ------------------------------------------------------------
-para_to_resp <- para_links
-
-
-
+para_to_resp <- para_links  ### all the remaining SHOULD just be responses
 
 # Save objs to export -----------------------------------------------------
 export <- c(paste(export), "euts_to_para", "euts_to_jlb",

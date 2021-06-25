@@ -31,28 +31,16 @@ source("R/make_questions_table.R")
 source("R/make_people_table.R")
 
 # 6. Extract the interpreted and paraphrased responses -------------------------------------------------------------------------
-source("R/make_jlb_para_tables.R")
+source("R/jlb_para_euts_tables.R")
 
-# 7. Extract the top-level nodes EUTS (how i tried to type end users) --------------------------------------------
-source("R/create_euts_tables.R")
+# 7. Add the Question Names to Links that have "Response:..." tag -----------------------------------------------
+source("R/question_to_resp.R")
 
-# 8. Responses Tables ---------------------------------------------------------
-source("R/make_response_tables.R")
+# 8. People, affiliations to responses ------------------------------------
+source("R/people_aff_to_resp.R")
 
-
-# 9. Add the Question Names to Links that have "Response:..." tag -----------------------------------------------
-source("R/make_response_tag_link_tables.R")
-
-# 10. Handle remaining links --------------------------------------------------
-source("R/make_resp_to_resp_table.R")
-
-
-# 11. Para to response ----------------------------------------------------
-
-
-
-# 12. Jlb to Response -----------------------------------------------------
-
+# 9. Resp to Resp ---------------------------------------------------------
+source("R/resp_to_resp.R")
 
 
 # NOTES -------------------------------------------------------------------

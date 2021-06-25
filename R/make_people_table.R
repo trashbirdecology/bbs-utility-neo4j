@@ -69,11 +69,15 @@ people <- people %>%
 # Pull out the codes for paraphrases and JLB interp -----------------------
 para.lookup.id <- people %>%
     filter(str_detect(PersonName, "(?i)paraphrase")) %>%
-    rename(ParaId = PersonId)
+    rename(ParaId = PersonId) %>%
+    rename(ParaName = PersonName) %>%
+    select(ParaId, ParaName)
 
 jlb.lookup.id <- people %>%
     filter(str_detect(PersonName, "(?i)jlb" )) %>%
-    rename(JlbId = PersonId)
+    rename(JlbId = PersonId, JlbName = PersonName) %>%
+    select(JlbId, JlbName)
+
 
 # remove these from people tbl
 people <- people %>% filter(!PersonId %in% c(para.lookup.id$ParaId, jlb.lookup.id$JlbId))
