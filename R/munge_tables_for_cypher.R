@@ -6,8 +6,6 @@ euts_to_jlb <- euts_to_jlb %>% rename(JlbName = Name.Parent,
                        EutsId  = TypeId.Parent
                        )
 
-
-
 # EUTS TO PARA ------------------------------------------------------------
 euts_to_para <- euts_to_para %>% rename(ParaName = Name.Parent,
                                       EutsName = TypeName.Parent,
@@ -61,11 +59,10 @@ resp_to_jlb <- resp_to_jlb %>%
 # RESP TO RESP -------------------------------------------------------------
 resp_to_resp <- resp_to_resp %>%
     rename(RespName = Name.Parent,
-           RespName = Name.Child,
+           RespChildName = Name.Child,
            RespId = ThoughtIdA,
-           RespId  = ThoughtIdB
+           RespChildId  = ThoughtIdB
     )
-
 
 
 
@@ -94,5 +91,45 @@ question_to_resp <- question_to_resp %>%
            QuestionId = ThoughtIdA,
            RespId  = ThoughtIdB
     )
+
+
+
+
+
+# REMOVE PERIODS FROM ALL COLNAMES ----------------------------------------
+
+## cant figure out how to make work in aloop so will do by hand..
+
+# for(i in seq_along(export)){
+#     if( export[i] %in% c("data.in","data.out", "nodes_orig", "links_orig",
+#                         "export", "nodes", "links"
+#                         ))next()
+#
+# #remove periods in colnams
+# colnames <- eval(parse(text=export[i])) %>% names()
+#
+# eval(parse(text=
+# paste("names(export[i]) <- gsub("\\.","", colnames)")
+#            ))
+#
+# names(eval(parse(text=export[i]))) <-
+# rm(colnames)
+#
+# }
+
+names(questions)  <-  gsub("\\.","", names(questions))
+names(people)  <-  gsub("\\.","", names(people))
+names(euts_to_para)  <-  gsub("\\.","", names(euts_to_para))
+names(euts_to_jlb)  <-  gsub("\\.","", names(euts_to_jlb))
+names(jlb_to_para)  <-  gsub("\\.","", names(jlb_to_para))
+names(jlb_to_resp)  <-  gsub("\\.","", names(jlb_to_resp))
+names(para_to_resp)  <-  gsub("\\.","", names(para_to_resp))
+names(question_to_resp)  <-  gsub("\\.","", names(question_to_resp))
+names(person_to_resp)  <-  gsub("\\.","", names(person_to_resp))
+names(aff_to_resp)  <-  gsub("\\.","", names(aff_to_resp))
+names(resp_to_resp)  <-  gsub("\\.","", names(resp_to_resp))
+names(resp_to_para)  <-  gsub("\\.","", names(resp_to_para))
+names(resp_to_jlb)  <-  gsub("\\.","", names(resp_to_jlb))
+
 
 
