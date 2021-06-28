@@ -5,10 +5,11 @@ MATCH (n) DETACH DELETE n;
 CALL apoc.schema.assert({},{},true) YIELD label, key RETURN *
 
 //01. Set Constraints
-//clear all cosntraints
+//clear all existing constraints
 CALL apoc.schema.assert({},{},true) YIELD label, key
 RETURN *;
 
+//set constraints
 //people, org, aff
 CREATE CONSTRAINT pId ON (p:Person) ASSERT p.id IS UNIQUE;
 
@@ -47,7 +48,7 @@ MERGE (p:Person{id:row.PersonId, name:row.PersonName})
 MERGE (o:Organization{id:row.OrganizationId, name:row.OrganizationName})
 MERGE (a:Affiliation{id:row.AffiliationId, name:row.AffiliationName})
 MERGE (p) -[:HAS_EMPLOYER]-> (o)
-MERGE (p) -[:HAS_AFFILIATION]-> (a)
+MERGE (p) -[:HAS_AFFILIATION]-> (a);
 
 
 
@@ -57,7 +58,7 @@ LOAD CSV WITH HEADERS FROM
 
 MERGE (r:Response{id:row.RespId, name:row.RespName})
 MERGE (p:Person{id:row.PersonId})
-MERGE (p)-[:HAS_RESPONSE]->(r)
+MERGE (p)-[:HAS_RESPONSE]->(r);
 
 //04. Affiliation to Response
 LOAD CSV WITH HEADERS FROM
@@ -65,7 +66,7 @@ LOAD CSV WITH HEADERS FROM
 
 MERGE (r:Response{id:row.RespId, name:row.RespName})
 MERGE (a:Affiliation{id:row.AffiliationId})
-MERGE (a)-[:HAS_RESPONSE]->(r)
+MERGE (a)-[:HAS_RESPONSE]->(r);
 
 
 //05. Response to Response
@@ -74,7 +75,7 @@ LOAD CSV WITH HEADERS FROM
 
 MERGE (r:Response{id:row.RespId, name:row.RespName})
 MERGE (rc:ResponseChild{id:row.RespChildId, name:row.RespChildName})
-MERGE (r)-[:HAS_CHILD]->(rc)
+MERGE (r)-[:HAS_CHILD]->(rc);
 
 
 //06. JLB to Response
@@ -83,7 +84,7 @@ LOAD CSV WITH HEADERS FROM
 
 MERGE (j:`JLB Interpretation`{id:row.JlbId, name:row.JlbName})
 MERGE (r:Response{id:row.RespId, name:row.RespName})
-MERGE (r)-[:HAS_INTERPRETATION]->(j)
+MERGE (r)-[:HAS_INTERPRETATION]->(j);
 
 
 //07. JLB to Paraphrased
@@ -92,7 +93,7 @@ LOAD CSV WITH HEADERS FROM
 
 MERGE (j:`JLB Interpretation`{id:row.JlbId, name:row.JlbName})
 MERGE (para:Paraphrases{id:row.ParaId, name:row.ParaName})
-MERGE (para)-[:IS_CLASSIFIED_AS]->(j)
+MERGE (para)-[:IS_CLASSIFIED_AS]->(j);
 
 
 //08. Paraphrased to Response
@@ -101,7 +102,7 @@ LOAD CSV WITH HEADERS FROM
 
 MERGE (r:Response{id:row.RespId, name:row.RespName})
 MERGE (para:Paraphrases{id:row.ParaId, name:row.ParaName})
-MERGE (r)-[:IS_PARAPHRASED_AS]->(para)
+MERGE (r)-[:IS_PARAPHRASED_AS]->(para);
 
 
 //09. Response to Paraphrased
@@ -110,7 +111,7 @@ LOAD CSV WITH HEADERS FROM
 
 MERGE (r:Response{id:row.RespId, name:row.RespName})
 MERGE (para:Paraphrases{id:row.ParaId, name:row.ParaName})
-MERGE (r)-[:HAS_CHILD]->(para)
+MERGE (r)-[:HAS_CHILD]->(para);
 
 
 //10. Response to JLB
@@ -119,7 +120,7 @@ LOAD CSV WITH HEADERS FROM
 
 MERGE (j:`JLB Interpretation`{id:row.JlbId, name:row.JlbName})
 MERGE (r:Response{id:row.RespId, name:row.RespName})
-MERGE (r)-[:HAS_CHILD]->(j)
+MERGE (r)-[:HAS_CHILD]->(j);
 
 
 //11. EUTS to JLB
@@ -128,7 +129,7 @@ LOAD CSV WITH HEADERS FROM
 
 MERGE (e:`End User Type`{id:row.EutsId, name:row.EutsName})
 MERGE (j:`JLB Interpretation`{id:row.JlbId, name:row.JlbName})
-MERGE (j)-[:IS_USER_TYPE]->(e)
+MERGE (j)-[:IS_USER_TYPE]->(e);
 
 
 //12. EUTS to Paraphrased
@@ -137,6 +138,6 @@ LOAD CSV WITH HEADERS FROM
 
 MERGE (para:Paraphrases{id:row.ParaId, name:row.ParaName})
 MERGE (e:`End User Type`{id:row.EutsId, name:row.EutsName})
-MERGE (p)-[:IS_USER_TYPE]->(e)
+MERGE (p)-[:IS_USER_TYPE]->(e);
 
 
