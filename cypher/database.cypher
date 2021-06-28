@@ -2,12 +2,12 @@
 //All nodes and relationships.
 MATCH (n) DETACH DELETE n;
 // All indexes and constraints.
-CALL apoc.schema.assert({},{},true) YIELD label, key RETURN *
+CALL apoc.schema.assert({},{},true) YIELD label, key;
 
 //01. Set Constraints
 //clear all existing constraints
-CALL apoc.schema.assert({},{},true) YIELD label, key
-RETURN *;
+//CALL apoc.schema.assert({},{},true) YIELD label, key;
+
 
 //set constraints
 //people, org, aff
