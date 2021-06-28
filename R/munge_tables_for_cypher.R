@@ -17,7 +17,7 @@ euts_to_para <- euts_to_para %>% rename(ParaName = Name.Parent,
 jlb_to_para <- jlb_to_para %>%
     rename(JlbName = Name.Parent,
            ParaName = Name.Child,
-           JLbId = ThoughtIdA,
+           JlbId = ThoughtIdA,
            ParaId  = ThoughtIdB
     )
 
@@ -29,7 +29,7 @@ jlb_to_para <- jlb_to_para %>%
 jlb_to_resp <- jlb_to_resp %>%
     rename(JlbName = Name.Parent,
            RespName = Name.Child,
-           JLbId = ThoughtIdA,
+           JlbId = ThoughtIdA,
            RespId  = ThoughtIdB
     )
 
