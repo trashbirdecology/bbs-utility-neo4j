@@ -1,43 +1,3 @@
-//00. Clear Data and Schema
-//All nodes and relationships.
-MATCH (n) DETACH DELETE n;
-// All indexes and constraints.
-CALL apoc.schema.assert({},{},true) YIELD label, key;
-
-//01. Set Constraints
-//clear all existing constraints
-CALL apoc.schema.assert({},{},true) YIELD label, key;
-
-
-//set constraints
-//people, org, aff
-CREATE CONSTRAINT pId ON (p:Person) ASSERT p.id IS UNIQUE;
-
-CREATE CONSTRAINT pName ON (p:Person) ASSERT p.name IS UNIQUE;
-
-CREATE CONSTRAINT oId ON (o:Organization) ASSERT o.id IS UNIQUE;
-
-CREATE CONSTRAINT oName ON (o:Organization) ASSERT o.name IS UNIQUE;
-
-CREATE CONSTRAINT aId ON (a:Affiliation) ASSERT a.id IS UNIQUE;
-CREATE CONSTRAINT aName ON (a:Affiliation) ASSERT a.name IS UNIQUE;
-
-// end user type
-CREATE CONSTRAINT eId ON (e:`End User Type`) ASSERT e.id IS UNIQUE;
-CREATE CONSTRAINT eName ON (e:`End User Type`) ASSERT e.name IS UNIQUE;
-
-// questions and responses
-CREATE CONSTRAINT qId ON (q:Question) ASSERT q.id IS UNIQUE;
-CREATE CONSTRAINT qName ON (q:Question) ASSERT q.name IS UNIQUE;
-CREATE CONSTRAINT rId ON (r:Response) ASSERT r.id IS UNIQUE;
-CREATE CONSTRAINT rName ON (r:Response) ASSERT r.name IS UNIQUE;
-
-
-// JLB and Paraphrased
-CREATE CONSTRAINT jId ON (j:`JLB Interpretation`) ASSERT j.id IS UNIQUE;
-CREATE CONSTRAINT jName ON (j:`JLB Interpretation`) ASSERT j.name IS UNIQUE;
-CREATE CONSTRAINT paraId ON (para:Paraphrases) ASSERT para.id IS UNIQUE;
-CREATE CONSTRAINT paraName ON (para:Paraphrases) ASSERT para.name IS UNIQUE;
 
 // 02. People, Affilations
 
@@ -55,22 +15,29 @@ MERGE (p) -[:HAS_AFFILIATION]-> (a);
 //03. Person to Response
 LOAD CSV WITH HEADERS FROM
 "file:////Users/jburnett/OneDrive%20-%20DOI/research/bbs_utility/neo4j-brain-data/data/person_to_resp.csv" AS row
-
 MERGE (r:Response{id:row.RespId, name:row.RespName})
+
+WITH row
+WHERE row.PersonId IS NOT NULL
 MERGE (p:Person{id:row.PersonId})
+
+WITH row
+WHERE row.OrganizationId IS NOT NULL
 MERGE (o:Organization{id:row.OrganizationId, name:row.OrganizationName})
 MERGE (a:Affiliation{id:row.AffiliationId, name:row.AffiliationName})
 MERGE (p)-[:HAS_RESPONSE]->(r)
 MERGE (o)-[:IS_ASSOCIATED_WITH]->(r)
 MERGE (a)-[:IS_ASSOCIATED_WITH]->(r);
 
-//04. Affiliation to Response
-LOAD CSV WITH HEADERS FROM
-"file:////Users/jburnett/OneDrive%20-%20DOI/research/bbs_utility/neo4j-brain-data/data/aff_to_resp.csv" AS row
 
-MERGE (r:Response{id:row.RespId, name:row.RespName})
-MERGE (a:Affiliation{id:row.AffiliationId, name:row.AffiliationName})
-MERGE (a)-[:IS_ASSOCIATED_WITH]->(r)
+///SOMETHIGN IS WRONG WIHT .04, but it shouldnt be needed if all responses have a person assigned.
+//04. Affiliation to Response
+//LOAD CSV WITH HEADERS FROM
+//"file:////Users/jburnett/OneDrive%20-%20DOI/research/bbs_utility/neo4j-brain-data/data/aff_to_resp.csv" AS row
+
+//MERGE (r:Response{id:row.RespId, name:row.RespName})
+//MERGE (a:Affiliation{id:row.AffiliationId, name:row.AffiliationName})
+//MERGE (a)-[:IS_ASSOCIATED_WITH]->(r);
 
 
 //05. Response to Response

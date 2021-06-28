@@ -1,0 +1,3 @@
+apoc.cypher.runFile("file:////Users/jburnett/Documents/GitHub/bbs-utility-neo4j/cypher/constraints.cypher")
+
+apoc.cypher.runFile("file:////Users/jburnett/Documents/GitHub/bbs-utility-neo4j/cypher/database.cypher")

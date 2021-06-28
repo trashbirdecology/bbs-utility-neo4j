@@ -81,13 +81,15 @@ person_to_resp <- left_join(person_to_resp, people)
 
 # AFFILIATION TO RESP -------------------------------------------------------------
 aff_to_resp <- aff_to_resp %>%
-    rename(AffliationName = Name.Parent,
+    rename(AffiliationName = Name.Parent,
            RespName = Name.Child,
            AffiliationId = ThoughtIdA,
            RespId  = ThoughtIdB
     ) %>%
-    select(AffiliationId, AffliationName, RespName, RespId)
+    select(AffiliationId, AffiliationName, RespName, RespId)
 
+# MERGE PERS AND AFF TO RESP ----------------------------------------------
+pers_aff_to_resp <- full_join(person_to_resp, aff_to_resp)
 
 
 # QUESTION TO RESP -------------------------------------------------------------
@@ -135,6 +137,10 @@ names(resp_to_para)  <-  gsub("\\.","", names(resp_to_para))
 names(resp_to_jlb)  <-  gsub("\\.","", names(resp_to_jlb))
 
 
+
+# exports -----------------------------------------------------------------
+
+export <- c(export, "pers_aff_to_resp")
 
 # END  --------------------------------------------------------------------
 
