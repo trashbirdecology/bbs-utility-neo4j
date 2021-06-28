@@ -6,7 +6,7 @@ CALL apoc.schema.assert({},{},true) YIELD label, key;
 
 //01. Set Constraints
 //clear all existing constraints
-//CALL apoc.schema.assert({},{},true) YIELD label, key;
+CALL apoc.schema.assert({},{},true) YIELD label, key;
 
 
 //set constraints
@@ -58,15 +58,19 @@ LOAD CSV WITH HEADERS FROM
 
 MERGE (r:Response{id:row.RespId, name:row.RespName})
 MERGE (p:Person{id:row.PersonId})
-MERGE (p)-[:HAS_RESPONSE]->(r);
+MERGE (o:Organization{id:row.OrganizationId, name:row.OrganizationName})
+MERGE (a:Affiliation{id:row.AffiliationId, name:row.AffiliationName})
+MERGE (p)-[:HAS_RESPONSE]->(r)
+MERGE (o)-[:IS_ASSOCIATED_WITH]->(r)
+MERGE (a)-[:IS_ASSOCIATED_WITH]->(r);
 
 //04. Affiliation to Response
 LOAD CSV WITH HEADERS FROM
 "file:////Users/jburnett/OneDrive%20-%20DOI/research/bbs_utility/neo4j-brain-data/data/aff_to_resp.csv" AS row
 
 MERGE (r:Response{id:row.RespId, name:row.RespName})
-MERGE (a:Affiliation{id:row.AffiliationId})
-MERGE (a)-[:HAS_RESPONSE]->(r);
+MERGE (a:Affiliation{id:row.AffiliationId, name:row.AffiliationName})
+MERGE (a)-[:IS_ASSOCIATED_WITH]->(r)
 
 
 //05. Response to Response
@@ -141,3 +145,10 @@ MERGE (e:`End User Type`{id:row.EutsId, name:row.EutsName})
 MERGE (p)-[:IS_USER_TYPE]->(e);
 
 
+//13. Response to Question Type
+LOAD CSV WITH HEADERS FROM
+"file:////Users/jburnett/OneDrive%20-%20DOI/research/bbs_utility/neo4j-brain-data/data/question_to_resp.csv" AS row
+
+MERGE (q:Question{id:row.QuestionId, name:row.QuestionName})
+MERGE (r:Response{id:row.RespId, name:row.RespName})
+MERGE (r)-[:ANSWERS_QUESTION]->(q);

@@ -72,7 +72,12 @@ person_to_resp <- person_to_resp %>%
            RespName = Name.Child,
            PersonId = ThoughtIdA,
            RespId  = ThoughtIdB
+    )%>%
+    select(PersonId, PersonName, RespName, RespId,
     )
+
+## add affiliations to the person to response table
+person_to_resp <- left_join(person_to_resp, people)
 
 # AFFILIATION TO RESP -------------------------------------------------------------
 aff_to_resp <- aff_to_resp %>%
@@ -80,7 +85,8 @@ aff_to_resp <- aff_to_resp %>%
            RespName = Name.Child,
            AffiliationId = ThoughtIdA,
            RespId  = ThoughtIdB
-    )
+    ) %>%
+    select(AffiliationId, AffliationName, RespName, RespId)
 
 
 
@@ -91,9 +97,6 @@ question_to_resp <- question_to_resp %>%
            QuestionId = ThoughtIdA,
            RespId  = ThoughtIdB
     )
-
-
-
 
 
 # REMOVE PERIODS FROM ALL COLNAMES ----------------------------------------
@@ -130,6 +133,11 @@ names(aff_to_resp)  <-  gsub("\\.","", names(aff_to_resp))
 names(resp_to_resp)  <-  gsub("\\.","", names(resp_to_resp))
 names(resp_to_para)  <-  gsub("\\.","", names(resp_to_para))
 names(resp_to_jlb)  <-  gsub("\\.","", names(resp_to_jlb))
+
+
+
+# END  --------------------------------------------------------------------
+
 
 
 
