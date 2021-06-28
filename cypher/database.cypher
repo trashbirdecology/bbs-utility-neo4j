@@ -15,18 +15,26 @@ MERGE (p) -[:HAS_AFFILIATION]-> (a);
 //03. Person to Response
 LOAD CSV WITH HEADERS FROM
 "file:////Users/jburnett/OneDrive%20-%20DOI/research/bbs_utility/neo4j-brain-data/data/person_to_resp.csv" AS row
-MERGE (r:Response{id:row.RespId, name:row.RespName})
-
 WITH row
 WHERE row.PersonId IS NOT NULL
+MERGE (r:Response{id:row.RespId, name:row.RespName})
 MERGE (p:Person{id:row.PersonId})
+MERGE (p)-[:HAS_RESPONSE]->(r);
 
+LOAD CSV WITH HEADERS FROM
+"file:////Users/jburnett/OneDrive%20-%20DOI/research/bbs_utility/neo4j-brain-data/data/person_to_resp.csv" AS row
 WITH row
 WHERE row.OrganizationId IS NOT NULL
+MERGE (r:Response{id:row.RespId, name:row.RespName})
 MERGE (o:Organization{id:row.OrganizationId, name:row.OrganizationName})
+MERGE (o)-[:IS_ASSOCIATED_WITH]->(r);
+
+LOAD CSV WITH HEADERS FROM
+"file:////Users/jburnett/OneDrive%20-%20DOI/research/bbs_utility/neo4j-brain-data/data/person_to_resp.csv" AS row
+WITH row
+WHERE row.AffiliationId IS NOT NULL
+MERGE (r:Response{id:row.RespId, name:row.RespName})
 MERGE (a:Affiliation{id:row.AffiliationId, name:row.AffiliationName})
-MERGE (p)-[:HAS_RESPONSE]->(r)
-MERGE (o)-[:IS_ASSOCIATED_WITH]->(r)
 MERGE (a)-[:IS_ASSOCIATED_WITH]->(r);
 
 
