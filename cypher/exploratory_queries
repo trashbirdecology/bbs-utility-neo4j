@@ -1,0 +1,8 @@
+// exploratory queries
+
+// A. Viz DB schjema
+CALL db.schema.visualization()
+
+// B. Basic stats for database
+CALL apoc.meta.stats()
+YIELD labels
