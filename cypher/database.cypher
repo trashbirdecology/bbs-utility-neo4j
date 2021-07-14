@@ -1,5 +1,5 @@
 
-// 02. People, Affilations
+// 02a. People, Organizations, Affiliations
 
 LOAD CSV WITH HEADERS FROM
 "file:////Users/jburnett/OneDrive%20-%20DOI/research/bbs_utility/neo4j-brain-data/data/people.csv" AS row
@@ -11,41 +11,23 @@ MERGE (p) -[:HAS_EMPLOYER]-> (o)
 MERGE (p) -[:HAS_AFFILIATION]-> (a);
 
 
-
-//03. Person to Response
+//02b. Person to Response
 LOAD CSV WITH HEADERS FROM
 "file:////Users/jburnett/OneDrive%20-%20DOI/research/bbs_utility/neo4j-brain-data/data/person_to_resp.csv" AS row
 WITH row
 WHERE row.PersonId IS NOT NULL
 MERGE (r:Response{id:row.RespId, name:row.RespName})
-MERGE (p:Person{id:row.PersonId})
+MERGE (p:Person{id:row.PersonId, name:row.PersonName})
 MERGE (p)-[:HAS_RESPONSE]->(r);
 
-LOAD CSV WITH HEADERS FROM
-"file:////Users/jburnett/OneDrive%20-%20DOI/research/bbs_utility/neo4j-brain-data/data/person_to_resp.csv" AS row
-WITH row
-WHERE row.OrganizationId IS NOT NULL
-MERGE (r:Response{id:row.RespId, name:row.RespName})
-MERGE (o:Organization{id:row.OrganizationId, name:row.OrganizationName})
-MERGE (o)-[:IS_ASSOCIATED_WITH]->(r);
 
 LOAD CSV WITH HEADERS FROM
-"file:////Users/jburnett/OneDrive%20-%20DOI/research/bbs_utility/neo4j-brain-data/data/person_to_resp.csv" AS row
+"file:////Users/jburnett/OneDrive%20-%20DOI/research/bbs_utility/neo4j-brain-data/data/aff_to_resp.csv" AS row
 WITH row
 WHERE row.AffiliationId IS NOT NULL
 MERGE (r:Response{id:row.RespId, name:row.RespName})
-MERGE (a:Affiliation{id:row.AffiliationId, name:row.AffiliationName})
+MERGE (a:Affiliation{id:row.AffiliationId})
 MERGE (a)-[:IS_ASSOCIATED_WITH]->(r);
-
-
-///SOMETHIGN IS WRONG WIHT .04, but it shouldnt be needed if all responses have a person assigned.
-//04. Affiliation to Response
-//LOAD CSV WITH HEADERS FROM
-//"file:////Users/jburnett/OneDrive%20-%20DOI/research/bbs_utility/neo4j-brain-data/data/aff_to_resp.csv" AS row
-
-//MERGE (r:Response{id:row.RespId, name:row.RespName})
-//MERGE (a:Affiliation{id:row.AffiliationId, name:row.AffiliationName})
-//MERGE (a)-[:IS_ASSOCIATED_WITH]->(r);
 
 
 //05. Response to Response
