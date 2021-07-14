@@ -3,6 +3,11 @@
 // A. Viz DB schjema
 CALL db.schema.visualization()
 
-// B. Basic stats for database
+// B. See available procedures
+CALL dbms.procedures()
+
+// C. Basic stats for database
 CALL apoc.meta.stats()
 YIELD labels
+
+
