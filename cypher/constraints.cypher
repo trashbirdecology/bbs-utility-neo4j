@@ -12,11 +12,9 @@ CALL apoc.schema.assert({},{},true) YIELD label, key;
 //set constraints
 //people, org, aff
 CREATE CONSTRAINT pId ON (p:Person) ASSERT p.id IS UNIQUE;
-
 CREATE CONSTRAINT pName ON (p:Person) ASSERT p.name IS UNIQUE;
 
 CREATE CONSTRAINT oId ON (o:Organization) ASSERT o.id IS UNIQUE;
-
 CREATE CONSTRAINT oName ON (o:Organization) ASSERT o.name IS UNIQUE;
 
 CREATE CONSTRAINT aId ON (a:Affiliation) ASSERT a.id IS UNIQUE;
@@ -31,6 +29,8 @@ CREATE CONSTRAINT qId ON (q:Question) ASSERT q.id IS UNIQUE;
 CREATE CONSTRAINT qName ON (q:Question) ASSERT q.name IS UNIQUE;
 CREATE CONSTRAINT rId ON (r:Response) ASSERT r.id IS UNIQUE;
 CREATE CONSTRAINT rName ON (r:Response) ASSERT r.name IS UNIQUE;
+CREATE CONSTRAINT rcId ON (r:ResponseChild) ASSERT rc.id IS UNIQUE;
+CREATE CONSTRAINT rcName ON (r:ResponseChild) ASSERT rc.name IS UNIQUE;
 
 
 // JLB and Paraphrased

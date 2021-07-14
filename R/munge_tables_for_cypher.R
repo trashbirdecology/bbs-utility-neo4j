@@ -17,7 +17,7 @@ euts_to_para <- euts_to_para %>% rename(ParaName = Name.Parent,
 jlb_to_para <- jlb_to_para %>%
     rename(JlbName = Name.Parent,
            ParaName = Name.Child,
-           JLbId = ThoughtIdA,
+           JlbId = ThoughtIdA,
            ParaId  = ThoughtIdB
     )
 
@@ -29,7 +29,7 @@ jlb_to_para <- jlb_to_para %>%
 jlb_to_resp <- jlb_to_resp %>%
     rename(JlbName = Name.Parent,
            RespName = Name.Child,
-           JLbId = ThoughtIdA,
+           JlbId = ThoughtIdA,
            RespId  = ThoughtIdB
     )
 
@@ -95,22 +95,16 @@ question_to_resp <- question_to_resp %>%
 
 
 
-
-
 # REMOVE PERIODS FROM ALL COLNAMES ----------------------------------------
-# for(i in seq_along(export)){
-#     if(export[i] %in% c("data.in","data.out", "nodes_orig", "links_orig",
-#                         "export", "nodes", "links"
-#                         )) next()
-#
-# #remove periods in colnams
-#     df <-eval(parse(text=export[i]))
-#     temp <- names(df)
-#
-# names(eval(parse(export[i]))) <- gsub("\\.","", temp)
-#
-# }
-
-
+names(aff_to_resp) <- gsub("\\.", "", names(aff_to_resp))
+names(resp_to_jlb) <- gsub("\\.", "", names(resp_to_jlb))
+names(resp_to_para) <- gsub("\\.", "", names(resp_to_para))
+names(resp_to_resp) <- gsub("\\.", "", names(resp_to_resp))
+names(para_to_resp) <- gsub("\\.", "", names(para_to_resp))
+names(question_to_resp) <- gsub("\\.", "", names(question_to_resp))
+names(questions) <- gsub("\\.", "", names(questions))
+names(person_to_resp) <- gsub("\\.", "", names(person_to_resp))
+names(jlb_to_para) <- gsub("\\.", "", names(jlb_to_para))
+names(jlb_to_resp) <- gsub("\\.", "", names(jlb_to_resp))
 
 
