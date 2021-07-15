@@ -35,7 +35,7 @@ LOAD CSV WITH HEADERS FROM
 "file:////Users/jburnett/OneDrive%20-%20DOI/research/bbs_utility/neo4j-brain-data/data/resp_to_resp.csv" AS row
 
 MERGE (r:Response{id:row.RespIdParent, name:row.RespNameParent})
-MERGE (rc:ResponseChild{id:row.RespIdChild, name:row.RespNameChild})
+MERGE (rc:Response{id:row.RespIdChild, name:row.RespNameChild})
 MERGE (r)-[:HAS_CHILD]->(rc);
 
 

@@ -29,8 +29,8 @@ CREATE CONSTRAINT qId ON (q:Question) ASSERT q.id IS UNIQUE;
 CREATE CONSTRAINT qName ON (q:Question) ASSERT q.name IS UNIQUE;
 CREATE CONSTRAINT rId ON (r:Response) ASSERT r.id IS UNIQUE;
 CREATE CONSTRAINT rName ON (r:Response) ASSERT r.name IS UNIQUE;
-CREATE CONSTRAINT rcId ON (r:ResponseChild) ASSERT rc.id IS UNIQUE;
-CREATE CONSTRAINT rcName ON (r:ResponseChild) ASSERT rc.name IS UNIQUE;
+CREATE CONSTRAINT rcId ON (rc:Response) ASSERT rc.id IS UNIQUE;
+CREATE CONSTRAINT rcName ON (rc:Response) ASSERT rc.name IS UNIQUE;
 
 
 // JLB and Paraphrased
