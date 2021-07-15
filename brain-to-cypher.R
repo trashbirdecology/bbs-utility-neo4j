@@ -44,21 +44,17 @@ source("R/resp_to_resp.R")
 # 10. Final munge of data frames for cypher -------------------------------
 source("R/munge_tables_for_cypher.R")
 
+# 11. Make a single, big ass DF  --------------------------------------------------
+source("R/make_single_df.R")
 
-# 11. Export useful dfs  --------------------------------------------------
+
+
+# 12. Export useful dfs  --------------------------------------------------
 source("R/export_files_for_neo4j.R")
 
+
+
 # NOTES -------------------------------------------------------------------
-
-
-# top level = $EndUserTypeId EUTS -> JLB or ETUS -> PARA
-# second level = JLB interpretation code JLB -> PARA
-# Third level  = paraphrased PARA -> RESPONSE
-# Fourth = Response RESPONSE -> RESPONSE or RESPONSE -> ~nothing~
-# Fifth = Response end
-
-# people - had response -> response
-# affiliation - had response -> response
 
 
 
