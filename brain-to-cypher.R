@@ -3,6 +3,8 @@ rm(list=ls())
 date = "20210625" # for grabbing files. choose most rrecent or preferred brain export dump
 # initialize vector for storing export object names of interest.
 export <- c("data.in", "data.out")
+## create a directory to throw warnings and notes into
+dir.create("warnings")
 
 # set path to data in and data out.
 ## in my case, this data is private so need to specify a path.
@@ -46,6 +48,7 @@ source("R/munge_tables_for_cypher.R")
 
 # 11. Make a single, big ass DF  --------------------------------------------------
 source("R/make_single_df.R")
+## This isnt going to do what I want i think. I should figure out how to export the relationships from neo4j
 
 
 

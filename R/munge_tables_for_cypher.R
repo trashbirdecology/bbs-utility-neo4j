@@ -5,7 +5,6 @@ euts_to_jlb <- euts_to_jlb %>% rename(JlbName = Name.Parent,
                        JlbId = ThoughtIdA,
                        EutsId  = TypeId.Parent
                        )
-
 # EUTS TO PARA ------------------------------------------------------------
 euts_to_para <- euts_to_para %>% rename(ParaName = Name.Parent,
                                       EutsName = TypeName.Parent,
@@ -19,8 +18,8 @@ jlb_to_para <- jlb_to_para %>%
            ParaName = Name.Child,
            JlbId = ThoughtIdA,
            ParaId  = ThoughtIdB
-    )
-
+    ) %>%
+    select(JlbName, ParaName, JlbId, ParaId)
 
 
 
@@ -31,7 +30,8 @@ jlb_to_resp <- jlb_to_resp %>%
            RespName = Name.Child,
            JlbId = ThoughtIdA,
            RespId  = ThoughtIdB
-    )
+    ) %>%
+    select(JlbName, RespName, JlbId, RespId)
 
 # PARA TO RESP -------------------------------------------------------------
 para_to_resp <- para_to_resp %>%
@@ -39,7 +39,9 @@ para_to_resp <- para_to_resp %>%
            RespName = Name.Child,
            ParaId = ThoughtIdA,
            RespId  = ThoughtIdB
-    )
+    )%>%
+    select(ParaName, RespName, ParaId, RespId)
+
 
 # RESP TO PARA -------------------------------------------------------------
 resp_to_para <- resp_to_para %>%
@@ -47,14 +49,19 @@ resp_to_para <- resp_to_para %>%
            ParaName = Name.Child,
            RespId = ThoughtIdA,
            ParaId  = ThoughtIdB
-    )
+    )  %>%
+    select(ParaName, RespName, ParaId, RespId)
+
+
 # RESP TO JLB -------------------------------------------------------------
 resp_to_jlb <- resp_to_jlb %>%
     rename(RespName = Name.Parent,
            JlbName = Name.Child,
            RespId = ThoughtIdA,
            JlbId  = ThoughtIdB
-    )
+    ) %>%
+    select(JlbName, RespName, JlbId, RespId)
+
 
 # RESP TO RESP -------------------------------------------------------------
 resp_to_resp <- resp_to_resp %>%
@@ -62,9 +69,8 @@ resp_to_resp <- resp_to_resp %>%
            RespName.Child = Name.Child,
            RespId.Parent = ThoughtIdA,
            RespId.Child  = ThoughtIdB
-    )
-
-
+    ) %>%
+    select(RespName.Parent, RespName.Child, RespId.Parent ,RespId.Child)
 
 
 # PERSON TO RESP -------------------------------------------------------------
@@ -73,15 +79,17 @@ person_to_resp <- person_to_resp %>%
            RespName = Name.Child,
            PersonId = ThoughtIdA,
            RespId  = ThoughtIdB
-    )
+    ) %>%
+    select(PersonName, RespName, PersonId, RespId)
 
 # AFFILIATION TO RESP -------------------------------------------------------------
 aff_to_resp <- aff_to_resp %>%
-    rename(AffliationName = Name.Parent,
-           RespName = Name.Child,
-           AffiliationId = ThoughtIdA,
-           RespId  = ThoughtIdB
-    )
+    rename(
+        AffiliationName = Name.Parent,
+        RespName = Name.Child,
+        AffiliationId = ThoughtIdA,
+        RespId  = ThoughtIdB
+    )  %>% select(AffiliationName, RespName, RespId, AffiliationId)
 
 
 
@@ -91,8 +99,8 @@ question_to_resp <- question_to_resp %>%
            RespName = Name.Child,
            QuestionId = ThoughtIdA,
            RespId  = ThoughtIdB
-    )
-
+    ) %>%
+    select(QuestionName, RespName, RespId, QuestionId)
 
 
 # REMOVE PERIODS FROM ALL COLNAMES ----------------------------------------
@@ -107,4 +115,23 @@ names(person_to_resp) <- gsub("\\.", "", names(person_to_resp))
 names(jlb_to_para) <- gsub("\\.", "", names(jlb_to_para))
 names(jlb_to_resp) <- gsub("\\.", "", names(jlb_to_resp))
 
+
+# COMBINE PERSON AND AFF TO RESP ------------------------------------------
+person_to_resp <- full_join(person_to_resp, people)
+ ## we need to remove the aff to resps thata re already represented in teh person to resp
+temp <- aff_to_resp[!(aff_to_resp$AffiliationName %in% person_to_resp$AffiliationName &
+             aff_to_resp$RespName %in% person_to_resp$RespName) , ]
+
+## now join those to person to resp
+people_aff_to_resp <- full_join(person_to_resp, temp)
+
+rm(person_to_resp, aff_to_resp)
+
+# Save objs to export -----------------------------------------------------
+export <- c(paste(export), "people_aff_to_resp")
+
+# remove all else from mem
+rm(list=setdiff(ls(), export))
+
+# End run -----------------------------------------------------------------
 

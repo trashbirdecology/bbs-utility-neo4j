@@ -6,7 +6,6 @@ aff_to_resp <- links %>% filter(ThoughtIdA %in% people$AffiliationId)
 links <- setdiff(links, bind_rows(person_to_resp, aff_to_resp))
 
 
-
 # Save objs to export -----------------------------------------------------
 export <- c(paste(export), "person_to_resp", "aff_to_resp")
 

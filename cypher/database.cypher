@@ -13,7 +13,7 @@ MERGE (p) -[:HAS_AFFILIATION]-> (a);
 
 //02b. Person to Response
 LOAD CSV WITH HEADERS FROM
-"file:////Users/jburnett/OneDrive%20-%20DOI/research/bbs_utility/neo4j-brain-data/data/person_to_resp.csv" AS row
+"file:////Users/jburnett/OneDrive%20-%20DOI/research/bbs_utility/neo4j-brain-data/data/people_aff_to_resp.csv" AS row
 WITH row
 WHERE row.PersonId IS NOT NULL
 MERGE (r:Response{id:row.RespId, name:row.RespName})
@@ -22,7 +22,7 @@ MERGE (p)-[:HAS_RESPONSE]->(r);
 
 //03. Affiliation to Response
 LOAD CSV WITH HEADERS FROM
-"file:////Users/jburnett/OneDrive%20-%20DOI/research/bbs_utility/neo4j-brain-data/data/aff_to_resp.csv" AS row
+"file:////Users/jburnett/OneDrive%20-%20DOI/research/bbs_utility/neo4j-brain-data/data/people_aff_to_resp.csv" AS row
 WITH row
 WHERE row.AffiliationId IS NOT NULL
 MERGE (r:Response{id:row.RespId, name:row.RespName})
@@ -88,7 +88,7 @@ MERGE (r)-[:HAS_CHILD]->(j);
 LOAD CSV WITH HEADERS FROM
 "file:////Users/jburnett/OneDrive%20-%20DOI/research/bbs_utility/neo4j-brain-data/data/euts_to_jlb.csv" AS row
 
-MERGE (e:`End User Type`{id:row.EutsId, name:row.EutsName})
+MERGE (e:EndUserType{id:row.EutsId, name:row.EutsName})
 MERGE (j:`JLB Interpretation`{id:row.JlbId, name:row.JlbName})
 MERGE (j)-[:IS_USER_TYPE]->(e);
 
@@ -98,7 +98,7 @@ LOAD CSV WITH HEADERS FROM
 "file:////Users/jburnett/OneDrive%20-%20DOI/research/bbs_utility/neo4j-brain-data/data/euts_to_para.csv" AS row
 
 MERGE (para:Paraphrases{id:row.ParaId, name:row.ParaName})
-MERGE (e:`End User Type`{id:row.EutsId, name:row.EutsName})
+MERGE (e:EndUserType{id:row.EutsId, name:row.EutsName})
 MERGE (p)-[:IS_USER_TYPE]->(e);
 
 

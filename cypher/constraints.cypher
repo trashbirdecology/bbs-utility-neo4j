@@ -21,8 +21,8 @@ CREATE CONSTRAINT aId ON (a:Affiliation) ASSERT a.id IS UNIQUE;
 CREATE CONSTRAINT aName ON (a:Affiliation) ASSERT a.name IS UNIQUE;
 
 // end user type
-CREATE CONSTRAINT eId ON (e:`End User Type`) ASSERT e.id IS UNIQUE;
-CREATE CONSTRAINT eName ON (e:`End User Type`) ASSERT e.name IS UNIQUE;
+CREATE CONSTRAINT eId ON (e:EndUserType) ASSERT e.id IS UNIQUE;
+CREATE CONSTRAINT eName ON (e:EndUserType) ASSERT e.name IS UNIQUE;
 
 // questions and responses
 CREATE CONSTRAINT qId ON (q:Question) ASSERT q.id IS UNIQUE;
