@@ -39,5 +39,5 @@ vignettes/*.pdf
 .Renviron
 .DS_Store
 
-
+## Dir where warnings and notes are tossed into
 /warnings/
