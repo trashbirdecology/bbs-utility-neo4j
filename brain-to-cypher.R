@@ -25,7 +25,6 @@ source("R/import_json_from_brain.R")
 ## Lightly munges the links and nodes data frames.
 source("R/munge_brain.R")
 
-
 # 4. Extract questions ------------------------------------------------------
 source("R/make_questions_table.R")
 
@@ -37,6 +36,7 @@ source("R/jlb_para_euts_tables.R")
 
 # 7. Add the Question Names to Links that have "Response:..." tag -----------------------------------------------
 source("R/question_to_resp.R")
+
 # 8. People, affiliations to responses ------------------------------------
 source("R/people_aff_to_resp.R")
 
